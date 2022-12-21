@@ -1,0 +1,21 @@
+---
+- name: Add user
+  hosts: all
+  gather_facts: no
+  become: yes
+  roles:
+    - users
+
+- name: Add user
+  hosts: web
+  gather_facts: no
+  become: yes
+  roles:
+    - nginx
+
+- name: Add user
+  hosts: php_fpm
+  gather_facts: no
+  become: yes
+  roles:
+    - php_fpm

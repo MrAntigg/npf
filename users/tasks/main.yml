@@ -1,0 +1,18 @@
+---
+# tasks file for nginx_php_fpm
+- name: Add user user1
+  user:
+    name: user1
+    home: /home/user1/
+    shell: /bin/bash
+
+- name: create dir .ssh
+  file:
+    path: /home/user1/.ssh
+    state: directory
+
+- name: copy ssh-key
+  copy:
+    src: ~/ansible/id_rsa.pub
+    dest: /home/user1/.ssh/authorized_keys
+

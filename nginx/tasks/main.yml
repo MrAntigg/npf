@@ -1,0 +1,48 @@
+#tasks for install nginx
+- name: uninstall apache
+  apt:
+        name: apache2
+        autoremove: yes
+        state: absent
+
+- name: install nginx
+  apt:
+        name: nginx
+        state: latest
+        update_cache: true
+
+- name: start nginx
+  service:
+        name: nginx
+        state: started
+        enabled: true 
+
+- name: del default file
+  file:
+         path: /etc/nginx/sites-available/default
+         state: absent
+
+- name: edit default file
+  copy:
+         src: ~/ansible/default
+         dest: /etc/nginx/sites-available/default
+  notify:
+  - Restart nginx
+ 
+
+- name: del php_fastcgi.conf file
+  file:
+         path: /etc/nginx/php_fastcgi.conf
+         state: absent
+
+- name: edit php_fastcgi.conf file
+  copy:
+         src: ~/ansible/php_fastcgi.conf
+         dest: /etc/nginx/php_fastcgi.conf
+  notify:
+  - Restart nginx
+
+- name: create folder /opt/nginx/ansible
+  file:
+         path: /opt/nginx/ansible
+         state: directory

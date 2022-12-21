@@ -1,0 +1,49 @@
+---
+# tasks file for php_fpm
+- name: install php-fpm
+  apt:
+    pkg:
+      - php
+      - php-cli
+      - php-fpm
+      - php-json
+      - php-mysql
+      - php-zip
+      - php-gd
+      - php-mbstring
+      - php-curl
+      - php-xml
+      - php-pear
+      - php-bcmath
+    state: latest
+    update_cache: true
+
+- name: start php-fpm
+  service:
+        name: php8.1-fpm
+        state: started
+        enabled: true 
+
+- name: del www.conf file
+  file:
+         path: /etc/php/8.1/fpm/pool.d/www.conf
+         state: absent
+
+- name: edit php_fastcgi.conf file
+  copy:
+         src: ~/ansible/www.conf
+         dest: /etc/php/8.1/fpm/pool.d/www.conf
+  notify:
+  - Restart php-fpm
+
+- name: create folder /opt/nginx/ansible
+  file:
+         path: /opt/nginx/ansible
+         state: directory
+
+- name: copy index.php
+  copy:
+        src: ~/ansible/index.php
+        dest: /opt/nginx/ansible/index.php
+  notify: 
+  - Restart php-fpm
